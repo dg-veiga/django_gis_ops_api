@@ -1,10 +1,11 @@
 from django.contrib.gis.db import models
+from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 
 
-class RuralArea(models.Model):
-    owner = models.ForeignKey(
-        'base.Owner', on_delete=models.SET_NULL, null=True, blank=False)
+class UserArea(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=False)
 
     code = models.CharField(verbose_name=_("Name"), max_length=255,
                             null=True, blank=False)
@@ -32,6 +33,7 @@ class RuralArea(models.Model):
         return ' | '.join([self.owner.name, self.name])
 
     class Meta:
+        db_table = 'user_area'
         ordering = ['id']
-        verbose_name = _('Area')
-        verbose_name_plural = _('Areas')
+        verbose_name = _('User Area')
+        verbose_name_plural = _('User Areas')

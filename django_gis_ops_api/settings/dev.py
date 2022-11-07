@@ -1,5 +1,6 @@
-import os
 from .prod import *
+
+ALLOWED_HOSTS = ['testserver']
 
 DATABASES = {
     'default': {
