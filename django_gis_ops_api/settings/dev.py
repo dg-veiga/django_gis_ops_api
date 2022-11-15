@@ -1,6 +1,6 @@
 from .prod import *
 
-ALLOWED_HOSTS = ['testserver']
+ALLOWED_HOSTS = ['testserver', 'localhost']
 
 DATABASES = {
     'default': {

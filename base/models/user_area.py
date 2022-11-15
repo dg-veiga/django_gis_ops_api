@@ -3,11 +3,14 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext as _
 
 
+DESCRIPTION_LENGTH = 1000
+
+
 class UserArea(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=False)
 
-    code = models.CharField(verbose_name=_("Name"), max_length=255,
+    code = models.CharField(verbose_name=_("CAR Code"), max_length=255,
                             null=True, blank=False)
 
     description = models.TextField(verbose_name=_("Description"), null=True, blank=True)
@@ -30,7 +33,7 @@ class UserArea(models.Model):
     is_active = models.BooleanField(verbose_name=_("Is Active"), default=True)
 
     def __str__(self):
-        return ' | '.join([self.owner.name, self.name])
+        return ' | '.join([self.user.email, self.code])
 
     class Meta:
         db_table = 'user_area'

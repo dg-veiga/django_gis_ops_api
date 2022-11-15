@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework_gis.fields import GeometryField
 from geopandas import GeoSeries
 
-from base.models.user_area import UserArea
+from base.models.user_area import UserArea, DESCRIPTION_LENGTH
 
 
 class GeometryFieldSerializer(serializers.Field):
@@ -24,6 +24,13 @@ class GeometryFieldSerializer(serializers.Field):
 class UserAreaCreateSerializer(serializers.ModelSerializer):
     geometry = GeometryFieldSerializer(source='*')
 
+    def validate(self, data):
+        description = data.get('description')
+        if description and len(description) > DESCRIPTION_LENGTH:
+            data['description'] = (description[:DESCRIPTION_LENGTH - 3] + '...') \
+                if len(description) > DESCRIPTION_LENGTH else description
+        return data
+
     def validate_geometry(self, data):
         if data['geometry'].hasz:
             g = GeoSeries.from_wkt(data.wkt)
@@ -33,12 +40,18 @@ class UserAreaCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserArea
-        fields = ['id', 'user', 'geometry', 'centroid', 'area']
+        fields = ['id', 'user', 'code', 'description', 'geometry', 'centroid', 'area']
         read_only_fields = ['id', 'centroid', 'area']
         extra_kwargs = {
             'user': {'required': True},
             'code': {'required': True, 'allow_blank': False},
         }
+
+
+class UserAreaListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserArea
+        fields = '__all__'
 
 
 class UserAreaDetailSerializer(serializers.ModelSerializer):
