@@ -31,9 +31,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install GDAL==$(gdal-config --version) --global-option=build_ext --global-option="-I/usr/include/gdal"
-    - name: Setting up DB container
-      run: |
-        docker-compose up -d
     - name: Run Tests
       run: |
+        docker-compose up -d
         python manage.py test
